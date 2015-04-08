@@ -1,0 +1,14 @@
+服务进程
+前台进程
+后台进程
+空进程
+
+
+杀死自己
+Int pid = andorid.os.Process.myPid();
+android.os.Process.killProcess(pid);
+
+
+杀死别人的应用程序
+ActivityManager am = getSystemService(ACTIVITY_SERVICE);
+am.killBackgroundProcess(packageName);

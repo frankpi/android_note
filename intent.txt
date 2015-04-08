@@ -1,0 +1,15 @@
+ <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+  </intent-filter>
+
+在桌面创建快捷方式。
+
+同一个应用，有两个桌面的快捷方式，  2.3 联系人，拨号
+
+
+12-18 14:23:05.349: I/ActivityManager(61): Starting: Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10200000 cmp=com.android.contacts/.DialtactsContactsEntryActivity } from pid 134
+
+
+cmp

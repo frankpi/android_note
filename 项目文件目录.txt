@@ -1,0 +1,21 @@
+项目清单文件：
+
+
+assets 资产目录，会打包到APK中
+bin 编译后的文件目录，
+gen general 自动生成的目录 ：R.java BuildConfig.java
+lib 支持的jar包，会被添加到dependence目录下
+res 资源目录
+drawble 存放应用程序图标，自动在R文件中生成ID 
+	h	高
+	m	中	
+	l	低	
+	x	大
+	xx	超大
+
+AndroidManifest.xml 清单文件
+
+
+android tools 
+
+jdk版本问题不符，，android tool -> fix project

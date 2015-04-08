@@ -1,0 +1,26 @@
+
+打开模拟器
+adb.exe : android debug bridge 调试桥
+
+adb devices 列出所有的设备
+
+resset adb 重启调试桥
+adb kill-server
+adb start-server
+adb devices 开启设备
+adb shell linux命令
+adb install xxx.apk
+adb uninstall com.xx.xx
+adb pull 从设备到桌面
+adb push 从桌面到设备
+
+
+黑盒测试：
+
+白盒子测试：
+
+verbose 
+debug
+info
+warn
+error

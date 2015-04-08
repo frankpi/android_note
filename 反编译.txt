@@ -1,0 +1,9 @@
+apktool 工具 ：把apk反编译获取xml文件，读取应用程序的资源信息
+
+dex2jar：把dex文件 转化成jar文件
+
+jd-gui.exe 把jar文件 转化为java文件
+
+ant 做源文件的混淆，
+
+jni来java调用c

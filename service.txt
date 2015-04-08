@@ -1,0 +1,23 @@
+需求：既要保证服务的长期在后台运行，又想去调用服务里面方法；
+	 * 一般：线开启服务， 后绑定服务；
+	 * 1,开启服务 startService() > onCreate() 
+	 * 2,绑定服务 bindService() > onbind();
+	 * 3，解绑服务，服务只能解绑一次，多次就报错
+	 * 4，停止服务 stopService()
+
+
+
+----------绑定远程服务的流程-----------
+
+1，在activity 调用bindservice（）去绑定服务，
+	bindService(intent, myConn, BIND_AUTO_CREATE);
+
+2，在服务里面，需要重写方法 onBind() 在服务被绑定的时候 调用 返回一个IBinder 接口
+	对象（代理人） 结构定义需要开车aidl 用自动生成的IService.stub
+	代理人，必须要实现一个方法，这个方法可以调用到服务的方法；
+
+3，在activity的onServiceConnected 得到中间人 使用aidl 自动生成IService 利用IService.stub.asInterface()
+
+5，调用中间人方法
+
+6，中间人调用服务的方法

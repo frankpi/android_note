@@ -1,0 +1,15 @@
+1, raw_contacts 表：保存联系人的id  contact_id 存放联系人id
+
+2，data 表：保存联系人的数据 data1 存放数据 mimetype_id 存放数据的
+	类型raw_contact_id 保存数据属于那个联系人的
+
+3，mimetyoes 表：保存数据的类型 1 email 5 phone 7 name
+
+
+需求：
+
+1，查询raw_contact 表 把所有的联系人的id取出来
+
+2，根据id查询data 把这个id 对应的所有数据取出去
+
+3，根据数据的类型 查询mimetypes 表 获取数据的业务类型
