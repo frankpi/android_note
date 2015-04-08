@@ -1,25 +1,27 @@
-activity »î¶¯£¬Ò»¸ö½çÃæ£¬ 
-1£¬´´½¨ºÍÏú»ÙÉúÃüÖÜÆÚ
-2£¬¿ªÊ¼¿É¼ûºÍÍ£Ö¹¿É¼ûÉúÃüÖÜÆÚ
-3£¬»ñµÃ½¹µãºÍÊ§È¥½¹µãÉúÃüÖÜÆÚ
+activity æ´»åŠ¨ï¼Œä¸€ä¸ªç•Œé¢ï¼Œ 
+1ï¼Œåˆ›å»ºå’Œé”€æ¯ç”Ÿå‘½å‘¨æœŸ
+2ï¼Œå¼€å§‹å¯è§å’Œåœæ­¢å¯è§ç”Ÿå‘½å‘¨æœŸ
+3ï¼ŒèŽ·å¾—ç„¦ç‚¹å’Œå¤±åŽ»ç„¦ç‚¹ç”Ÿå‘½å‘¨æœŸ
+
+1[img](http://baike.baidu.com/picture/1136177/16056034/0/1c950a7b02087bf41b6972c2f0d3572c11dfcf17.html?fr=lemma&ct=single#aid=0&pic=6159252dd42a2834769e138b5ab5c9ea15cebf71)
 
 
-
-content provider  Ìá¹©Êý¾Ý£¬°ÑÒ»¸öÓ¦ÓÃ³ÌÐòË½ÓÐµÄÊý¾Ý¿â£¬±©Â¶¸ø±ðµÄÓ¦ÓÃ
+content provider  æä¾›æ•°æ®ï¼ŒæŠŠä¸€ä¸ªåº”ç”¨ç¨‹åºç§æœ‰çš„æ•°æ®åº“ï¼Œæš´éœ²ç»™åˆ«çš„åº”ç”¨
 
 
 broadcast receiver
-¹ã²¥½ÓÊÕÕßµÄÓÅÏÈ¼¶
--1000 ×îµÍ
- 1000 ×î¸ß
+å¹¿æ’­æŽ¥æ”¶è€…çš„ä¼˜å…ˆçº§
+-1000 æœ€ä½Ž
+ 1000 æœ€é«˜
 
 
-service ·þÎñ£¬ÔÚºóÌ¨³¤ÆÚÔËÐÐ£¬Ã»ÓÐ½çÃæµÄ×é¼þ¡£
+service æœåŠ¡ï¼Œåœ¨åŽå°é•¿æœŸè¿è¡Œï¼Œæ²¡æœ‰ç•Œé¢çš„ç»„ä»¶ã€‚
 
 
-Ó¦ÓÃ³ÌÐò---¡·×é¼þµÄ¼¯ºÏ
-½ø³Ì---¡·×é¼þµÄÔØÌå
+åº”ç”¨ç¨‹åº---ã€‹ç»„ä»¶çš„é›†åˆ
+è¿›ç¨‹---ã€‹ç»„ä»¶çš„è½½ä½“
 
 
-task stack ÈÎÎñÕ»Ö¸Õë¶Ô----¡·activity
-ÈÎÎñÕ»µÄ¸ÅÄî£ºÓÃÀ´Î¬»¤ÓÃ»§µÄ½çÃæÌåÑé
+task stack ä»»åŠ¡æ ˆæŒ‡é’ˆå¯¹----ã€‹activity
+ä»»åŠ¡æ ˆçš„æ¦‚å¿µï¼šç”¨æ¥ç»´æŠ¤ç”¨æˆ·çš„ç•Œé¢ä½“éªŒ
+
