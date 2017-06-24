@@ -1,0 +1,5 @@
+getIsOwned(){
+
+trialBegin
+return true;
+}
