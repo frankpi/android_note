@@ -1,0 +1,371 @@
+import groovy.json.JsonSlurper
+
+apply plugin: 'com.android.application'
+
+//加载资源
+Properties properties = new Properties()
+InputStream inputStream = project.rootProject.file('local.properties').newDataInputStream();
+properties.load(inputStream)
+
+//读取字段
+def config = 'subwaysurf'
+config = properties.getProperty('config')
+def lib = properties.getProperty('lib')
+String name = 'app/' + config + '.json'
+def json = new File(name).text
+def slurper = new JsonSlurper()
+def object = slurper.parseText(json)
+assert object instanceof Map
+assert object.gameInfos instanceof List
+String pluginPkgName = object.gameInfos[0].pluginPkgName;
+String pluginPkgVerCode = object.gameInfos[0].pluginPkgVerCode;
+String supportGames = object.gameInfos[0].supportGames;
+String pkgName = object.gameInfos[0].pkgName;
+String gameName = object.gameInfos[0].gameName;
+def noBuy = new StringBuffer();
+noBuy.append("com.iplay.assistant.toolbox.terra");
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion '26'
+    defaultConfig {
+        applicationId "com.example.frankpi.myapplication"
+        minSdkVersion 15
+        targetSdkVersion 25
+        versionCode = 11;
+        versionName = '1.0.11'
+    }
+    signingConfigs {
+        SignConfig {
+            keyAlias 'toolboxplugin'
+            keyPassword '123456'
+            storeFile file('toolboxplugin.jks')
+            storePassword '123456'
+        }
+    }
+
+    lintOptions {
+        disable 'MissingTranslation'
+        abortOnError false
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles 'proguard-rules.pro'
+            signingConfig signingConfigs.SignConfig
+            proguardFile 'proguard-rules.pro'
+            zipAlignEnabled true
+            // 移除无用的resource文件
+            shrinkResources true
+        }
+    }
+
+    productFlavors {
+        plugin {
+            applicationId pluginPkgName.toString()
+            versionCode = Integer.valueOf(pluginPkgVerCode);
+            versionName = "1.0." + versionCode
+            manifestPlaceholders = [Target0: pkgName.toString(), APP_NAME: gameName.toString(), APP_SUPPORT: supportGames.toString()]
+            buildConfigField "String", "toolbox_pkgname", ('"' + config.toString() + '"')
+            println("config" + config);
+            if (noBuy.toString().contains(config)) {
+                buildConfigField "boolean", "buy", "false";
+                println("buy-false");
+            } else {
+                buildConfigField "boolean", "buy", "true";
+                println("buy-true");
+            }
+
+
+            switch (lib) {
+//                case "thiswarofmine":
+//                    applicationId "com.gameassist.plugin.thiswarofmine"
+//                    manifestPlaceholders = [APP_NAME: "com.elevenbitstudios.twommobile", APP_SUPPORT: "[{'pkgName':'com.elevenbitstudios.twommobile','supportVerCode':'501','supportVerName':'1.4.0','skipGMS':true,'skipLVL':true}]"]
+//                    buildConfigField "String", "toolbox_pkgname", "\"com.iplay.assistant.thiswarofmine.cn\""
+//                    buildConfigField "boolean", "buy", "true"
+//                    gamename = 'thiswarofmine'
+//                    break;
+                case "kairosoft":
+//                    applicationId "com.gameassist.plugin.kairosoft"//海贼，学院，开罗星 not
+                    manifestPlaceholders = [Target0: "*", APP_NAME: "开罗", APP_SUPPORT: "[{'pkgName': 'net.kairosoft.android.bouken_en','supportVerCode': '205','supportVerName': '2.0.5','skipGMS': true,'skipLVL': true},{'pkgName': 'net.kairosoft.android.paddock2_en','supportVerCode': '59,64','supportVerName': '1.5.8,1.6.3','skipGMS': true,'skipLVL': true},{'pkgName': 'net.kairosoft.android.ninja_en','supportVerCode': '202','supportVerName': '2.0.2','skipGMS': true,'skipLVL': true},{'pkgName': 'net.kairosoft.android.pirate_en','supportVerCode': '211','supportVerName': '2.1.1','skipGMS': true,'skipLVL': true},{'pkgName': 'net.kairosoft.android.onsen_en','supportVerCode': '141','supportVerName': '2.3.9','skipGMS': true,'skipLVL': true},{'pkgName': 'net.kairosoft.android.cruise_en','supportVerCode': '222','supportVerName': '2.2.2','skipGMS': true,'skipLVL': true},{'pkgName': 'net.kairosoft.android.school2_en','supportVerCode': '205','supportVerName': '2.0.5','skipGMS': true,'skipLVL': true},{'pkgName': 'net.kairosoft.android.noujou_en','supportVerCode': '201','supportVerName': '2.0.1','skipGMS': true,'skipLVL': true},{'pkgName': 'net.kairosoft.android.starkairo_en','supportVerCode': '204','supportVerName': '2.0.4','skipGMS': true,'skipLVL': true},{'pkgName': 'net.kairosoft.android.gamecenter_en','supportVerCode': '14','supportVerName': '1.1.3','skipGMS': true,'skipLVL': true},{'pkgName': 'net.kairosoft.android.tennis_en','supportVerCode': '200','supportVerName': '2.0.0','skipGMS': true,'skipLVL': true}]"]
+//                    buildConfigField "String", "toolbox_pkgname", "\"com.iplay.assistant.collection.kairosoft.cn\""
+//                    buildConfigField "boolean", "buy", "true"
+                    break;
+//                case "toolboxterra":
+//                    applicationId "com.gameassist.plugin.toolbox.terra"
+//                    manifestPlaceholders = [APP_NAME: "com.and.games505.TerrariaPaid", APP_SUPPORT: "[{'pkgName': 'com.and.games505.TerrariaPaid','supportVerCode': '12785','supportVerName': '12785','skipGMS': false,'skipLVL': true},{'pkgName': 'com.and.games505.Terraria','supportVerCode': '12785','supportVerName': '12785','skipGMS': false,'skipLVL': true},{'pkgName': 'com.amz.games505.Terraria','supportVerCode': '12801','supportVerName': '1.2.12801','skipGMS': false,'skipLVL': false}]"]
+//                    buildConfigField "String", "toolbox_pkgname", "\"com.iplay.assistant.toolbox.terra\""
+//                    buildConfigField "boolean", "buy", "false"
+//                    gamename = 'terraria'
+//                    break;
+//                case "moddonotstarve":
+//                    applicationId "com.gameassist.plugin.mod.donotstarve"
+//                    manifestPlaceholders = [APP_NAME: "com.kleientertainment.doNotStarvePocket", APP_SUPPORT: "[{'pkgName':'com.kleientertainment.doNotStarvePocket','supportVerCode':'26','supportVerName':'1.0.4','skipGMS':false,'skipLVL':true}]"]
+//                    buildConfigField "String", "toolbox_pkgname", "\"com.iplay.assistant.mod.donotstarve\""
+//                    buildConfigField "boolean", "buy", "false"
+//                    gamename = 'donotstarve'
+//                    break;
+//                case "avaloncave_sea":
+//                    applicationId "com.gameassist.plugin.avaloncave"
+//                    manifestPlaceholders = [APP_NAME: "com.avalon.cave", APP_SUPPORT: "[{'pkgName':'com.avalon.cave','supportVerCode':'*','supportVerName':'*','skipGMS':true,'skipLVL':true},{'pkgName':'com.qbao.avalon.tldk.d','supportVerCode':'*','supportVerName':'*','skipGMS':false,'skipLVL':false},{'pkgName':'com.qbao.avalon.tldk.qh360','supportVerCode':'*','supportVerName':'*','skipGMS':false,'skipLVL':false},{'pkgName':'com.qbao.avalon.tldk.uc','supportVerCode':'*','supportVerName':'*','skipGMS':false,'skipLVL':false},{'pkgName':'com.xxgame.tldk.m4399','supportVerCode':'*','supportVerName':'*','skipGMS':false,'skipLVL':false},{'pkgName':'com.qbao.tldk.mzw','supportVerCode':'*','supportVerName':'*','skipGMS':false,'skipLVL':false},{'pkgName':'com.qbao.avalon.tldk.uc','supportVerCode':'*','supportVerName':'*','skipGMS':false,'skipLVL':false},{'pkgName':'com.tencent.tmgp.tldk','supportVerCode':'*','supportVerName':'*','skipGMS':false,'skipLVL':false}]"]
+//                    buildConfigField "String", "toolbox_pkgname", "\"com.iplay.assistant.avaloncave\""
+//                    buildConfigField "boolean", "buy", "false"
+//                    gamename = 'avaloncave'
+//                    break;
+//                case "soulknight_sea":
+//                    applicationId "com.gameassist.plugin.soulknight"
+//                    manifestPlaceholders = [APP_NAME: "com.ChillyRoom.DungeonShooter", APP_SUPPORT: "[{'pkgName':'com.ChillyRoom.DungeonShooter','supportVerCode':'*','supportVerName':'*','skipGMS':true,'skipLVL':true},{'pkgName':'com.knight.union.dn','supportVerCode':'*','supportVerName':'*','skipGMS':false,'skipLVL':false},{'pkgName':'com.tencent.tmgp.yqqskp':'*','supportVerName':'*','skipGMS':false,'skipLVL':false},{'pkgName':'com.knight.union.wdj':'*','supportVerName':'*','skipGMS':false,'skipLVL':false},{'pkgName':'com.knight.union.qihoo':'*','supportVerName':'*','skipGMS':false,'skipLVL':false},{'pkgName':'com.chillyroom.knight.m4399':'*','supportVerName':'*','skipGMS':false,'skipLVL':false}]"]
+//                    buildConfigField "String", "toolbox_pkgname", "\"com.iplay.assistant.soulknight\""
+//                    buildConfigField "boolean", "buy", "false"
+//                    gamename = 'soulknight'
+//                    break;
+//                case "donotstarveshipwrecked_sea":
+//                    applicationId "com.gameassist.plugin.donotstarveshipwrecked"
+//                    //0.06 6 com.kleientertainment.doNotStarveShipwrecked
+//                    manifestPlaceholders = [APP_NAME: "com.kleientertainment.doNotStarveShipwrecked", APP_SUPPORT: "[{'pkgName':'com.kleientertainment.doNotStarveShipwrecked','supportVerCode':'*','supportVerName':'*','skipGMS':false,'skipLVL':false}]"]
+//                    buildConfigField "String", "toolbox_pkgname", "\"com.iplay.assistant.donotstarve.shipwrecked\""
+//                    buildConfigField "boolean", "buy", "false"
+//                    gamename = 'donotstarveshipwrecked'
+//                    break;
+//                case "gta_sea":
+//                    applicationId "com.gameassist.plugin.gta"
+//                    manifestPlaceholders = [APP_NAME: "com.rockstargames.gtasa", APP_SUPPORT: "[{'pkgName': 'com.rockstargames.gtasa','supportVerCode': '*','supportVerName': '*','skipGMS': false,'skipLVL': false}]"]
+//                    buildConfigField "String", "toolbox_pkgname", "\"com.iplay.assistant.gta\""
+//                    buildConfigField "boolean", "buy", "false"
+//                    gamename = 'gta'
+//                    break;
+//                case "minecraft_sea":
+//                    applicationId "com.gameassist.plugin.minecraft"
+//                    manifestPlaceholders = [APP_NAME: "com.mojang.minecraftpe", APP_SUPPORT: "[{'pkgName':'com.mojang.minecraftpe','supportVerCode':'*','supportVerName':'*','skipGMS':false,'skipLVL':false}]"]
+//                    buildConfigField "String", "toolbox_pkgname", "\"com.iplay.assistant.minecraft\""
+//                    buildConfigField "boolean", "buy", "false"
+//                    gamename = 'minecraft'
+//                    break;
+//            //国内
+//                case "minecraft":
+//                    applicationId "com.gameassist.plugin.minecraft"
+//                    manifestPlaceholders = [APP_NAME: "com.mojang.minecraftpe", APP_SUPPORT: "[{'pkgName':'com.mojang.minecraftpe','supportVerCode':'871000901','supportVerName':'1.0.9.1','skipGMS':false,'skipLVL':false},{'pkgName':'com.mojang.minecraftpe','supportVerCode':'871000801','supportVerName':'1.0.8.1','skipGMS':false,'skipLVL':false}]"]
+//                    buildConfigField "String", "toolbox_pkgname", "\"com.iplay.assistant.minecraft.cn\""
+//                    buildConfigField "boolean", "buy", "true"
+//                    gamename = 'minecraft'
+//                    break;
+//                case "donotstarve":
+//                    applicationId "com.gameassist.plugin.donotbox.cn"
+//                    manifestPlaceholders = [APP_NAME: "com.kleientertainment.doNotStarvePocket", APP_SUPPORT: "[{'pkgName':'com.kleientertainment.doNotStarvePocket','supportVerCode':'26','supportVerName':'1.0.4','skipGMS':false,'skipLVL':false}]"]
+//                    buildConfigField "String", "toolbox_pkgname", "\"com.iplay.assistant.donotstarve.cn\""
+//                    buildConfigField "boolean", "buy", "true"
+//                    gamename = 'donotstarve'
+//                    break;
+//                case "donotstarveshipwrecked":
+//                    applicationId "com.gameassist.plugin.donotstarveshipwrecked"
+//                    manifestPlaceholders = [APP_NAME: "com.kleientertainment.doNotStarveShipwrecked", APP_SUPPORT: "[{'pkgName':'com.kleientertainment.doNotStarveShipwrecked','supportVerCode':'*','supportVerName':'*','skipGMS':false,'skipLVL':false}]"]
+//                    buildConfigField "String", "toolbox_pkgname", "\"com.iplay.assistant.donotstarve.shipwrecked.cn\""
+//                    buildConfigField "boolean", "buy", "true"
+//                    gamename = 'donotstarveshipwrecked'
+//                    break;
+//                case "subwaysurf":
+//                    applicationId "com.gameassist.plugin.subwaysurfers"
+//                    manifestPlaceholders = [APP_NAME: "com.kiloo.subwaysurf", APP_SUPPORT: "[{'pkgName':'com.kiloo.subwaysurf','supportVerCode':'*','supportVerName':'*','skipGMS':false,'skipLVL':false}]"]
+//                    buildConfigField "String", "toolbox_pkgname", "\"com.iplay.assistant.subwaysurfers.cn\""
+//                    buildConfigField "boolean", "buy", "true"
+//                    gamename = 'subwaysurf'
+//                    break;
+//                case "hungryshark":
+//                    applicationId "com.gameassist.plugin.hungryshark"
+//                    manifestPlaceholders = [APP_NAME: "com.fgol", APP_SUPPORT: "[{'pkgName': 'com.fgol','supportVerCode': '*','supportVerName': '*','skipGMS': false,'skipLVL': false},{'pkgName': 'com.fgol.wdj','supportVerCode': '3.7.2.7','supportVerName': '3.7.2.7','skipGMS': false,'skipLVL': false},{'pkgName': 'com.fgol.mzw','supportVerCode': '4.3.1.0','supportVerName': '4.3.1.0','skipGMS': false,'skipLVL': false},{'pkgName': 'com.tencent.tmgp.hse','supportVerCode': '4.3.0.1','supportVerName': '4.3.0.1','skipGMS': false,'skipLVL': false},{'pkgName': 'com.fgol.HungrySharkEvolutionchina','supportVerCode': '3.7.0','supportVerName': '3.7.0','skipGMS': false,'skipLVL': false},{'pkgName': 'com.fgol.m4399','supportVerCode': '4.3.1.0','supportVerName': '4.3.1.0','skipGMS': false,'skipLVL': false}]"]
+//                    buildConfigField "String", "toolbox_pkgname", "\"com.iplay.assistant.hungryshark.cn\""
+//                    buildConfigField "boolean", "buy", "true"
+//                    gamename = 'hungryshark'
+//                    break;
+//                case "deaddiary":
+//                    applicationId "com.gameassist.plugin.deaddiary"
+//                    manifestPlaceholders = [APP_NAME: "com.locojoy.buriedtown", APP_SUPPORT: "[{'pkgName':'com.locojoy.buriedtown','supportVerCode':'*','supportVerName':'*','skipGMS':false,'skipLVL':false}]"]
+//                    buildConfigField "String", "toolbox_pkgname", "\"com.iplay.assistant.deaddiary.cn\""
+//                    buildConfigField "boolean", "buy", "true"
+//                    gamename = 'deaddiary'
+//                    break;
+//                case "templerun2":
+//                    applicationId "com.gameassist.plugin.templerun2"
+//                    manifestPlaceholders = [APP_NAME: "com.imangi.templerun2.paid", APP_SUPPORT: "[{'pkgName':'com.imangi.templerun2.paid','supportVerCode':'*','supportVerName':'*','skipGMS':false,'skipLVL':false}]"]
+//                    buildConfigField "String", "toolbox_pkgname", "\"com.iplay.assistant.templerun2.cn\""
+//                    buildConfigField "boolean", "buy", "true"
+//                    gamename = 'templerun2'
+//                    break;
+//                case "terrarialite":
+//                    applicationId "com.gameassist.plugin.terrarialite"
+//                    manifestPlaceholders = [APP_NAME: "com.and.games505.TerrariaPaid", APP_SUPPORT: "[{'pkgName': 'com.and.games505.TerrariaPaid','supportVerCode': '12785','supportVerName': '12785','skipGMS': false,'skipLVL': true},{'pkgName': 'com.and.games505.Terraria','supportVerCode': '12785','supportVerName': '12785','skipGMS': false,'skipLVL': true},{'pkgName': 'com.amz.games505.Terraria','supportVerCode': '12801','supportVerName': '1.2.12801','skipGMS': false,'skipLVL': false}]"]
+//                    buildConfigField "String", "toolbox_pkgname", "\"com.iplay.assistant.terraria.lite\""
+//                    buildConfigField "boolean", "buy", "true"
+//                    gamename = 'terraria'  //151
+//                    break;
+//                case "terrariabox":
+//                    applicationId "com.gameassist.plugin.terrariabox"
+//                    manifestPlaceholders = [APP_NAME: "com.and.games505.TerrariaPaid", APP_SUPPORT: "[{'pkgName': 'com.and.games505.TerrariaPaid','supportVerCode': '12785','supportVerName': '12785','skipGMS': false,'skipLVL': true},{'pkgName': 'com.and.games505.Terraria','supportVerCode': '12785','supportVerName': '12785','skipGMS': false,'skipLVL': true},{'pkgName': 'com.amz.games505.Terraria','supportVerCode': '12801','supportVerName': '1.2.12801','skipGMS': false,'skipLVL': false}]"]
+//                    buildConfigField "String", "toolbox_pkgname", "\"com.iplay.assistant.terrariabox\""
+//                    buildConfigField "boolean", "buy", "true"
+//                    gamename = 'terraria'
+//                    break;
+//                case "plantsvszombies2":
+//                    applicationId "com.gameassist.plugin.plantsvszombies2"//com.gameassist.plugin.pvz2n.cn
+//                    manifestPlaceholders = [APP_NAME: "com.popcap.pvz2cthddl", APP_SUPPORT: "[{'pkgName':'com.popcap.pvz2cthddl','supportVerCode':'768,800,815','supportVerName':'2.0.1,2.0.1,2.1.1','skipGMS':false,'skipLVL':false},{'pkgName':'com.popcap.pvz2cthdwdj','supportVerCode':'768,800,815','supportVerName':'2.0.1','skipGMS':false,'skipLVL':false},{'pkgName':'com.tencent.tmgp.pvz2hdtxyyb','supportVerCode':'768,800,815','supportVerName':'2.0.1','skipGMS':false,'skipLVL':false},{'pkgName':'com.popcap.pvz2cthduc','supportVerCode':'768,800,815','supportVerName':'2.0.1','skipGMS':false,'skipLVL':false},{'pkgName':'com.popcap.pvz2cthd360','supportVerCode':'768,800,815','supportVerName':'2.0.1','skipGMS':false,'skipLVL':false},{'pkgName':'com.popcap.pvz2cthd','supportVerCode':'768,800,815','supportVerName':'2.0.1','skipGMS':false,'skipLVL':false},{'pkgName':'com.popcap.pvz2cthd4399','supportVerCode':'768,800,815','supportVerName':'2.0.1','skipGMS':false,'skipLVL':false}]"]
+//                    buildConfigField "String", "toolbox_pkgname", "\"com.iplay.assistant.plantsvszombies2.cn\""
+//                    buildConfigField "boolean", "buy", "true"
+//                    gamename = 'plantsvszombies2'
+//                    break;
+//                case "avaloncave":
+//                    applicationId "com.gameassist.plugin.cave.toolbox.cn"
+//                    manifestPlaceholders = [APP_NAME: "com.avalon.cave", APP_SUPPORT: "[{'pkgName':'com.avalon.cave','supportVerCode':'*','supportVerName':'*','skipGMS':true,'skipLVL':true},{'pkgName':'com.qbao.avalon.tldk.d','supportVerCode':'*','supportVerName':'*','skipGMS':false,'skipLVL':false},{'pkgName':'com.qbao.avalon.tldk.qh360','supportVerCode':'*','supportVerName':'*','skipGMS':false,'skipLVL':false},{'pkgName':'com.qbao.avalon.tldk.uc','supportVerCode':'*','supportVerName':'*','skipGMS':false,'skipLVL':false},{'pkgName':'com.xxgame.tldk.m4399','supportVerCode':'*','supportVerName':'*','skipGMS':false,'skipLVL':false},{'pkgName':'com.qbao.tldk.mzw','supportVerCode':'*','supportVerName':'*','skipGMS':false,'skipLVL':false},{'pkgName':'com.qbao.avalon.tldk.uc','supportVerCode':'*','supportVerName':'*','skipGMS':false,'skipLVL':false},{'pkgName':'com.tencent.tmgp.tldk','supportVerCode':'*','supportVerName':'*','skipGMS':false,'skipLVL':false}]"]
+//                    buildConfigField "String", "toolbox_pkgname", "\"com.iplay.assistant.avaloncave.cn\""
+//                    buildConfigField "boolean", "buy", "true"
+//                    gamename = 'avaloncave'
+//                    break;
+//                case "soulknight":
+//                    applicationId "com.gameassist.plugin.dungeonshooter.cn"
+//                    manifestPlaceholders = [APP_NAME: "com.ChillyRoom.DungeonShooter", APP_SUPPORT: "[{'pkgName':'com.ChillyRoom.DungeonShooter','supportVerCode':'*','supportVerName':'*','skipGMS':true,'skipLVL':true},{'pkgName':'com.knight.union.dn','supportVerCode':'*','supportVerName':'*','skipGMS':false,'skipLVL':false},{'pkgName':'com.tencent.tmgp.yqqskp','supportVerCode':'*','supportVerName':'*','skipGMS':false,'skipLVL':false},{'pkgName':'com.knight.union.wdj','supportVerCode':'*','supportVerName':'*','skipGMS':false,'skipLVL':false},{'pkgName':'com.knight.union.qihoo','supportVerCode':'*','supportVerName':'*','skipGMS':false,'skipLVL':false},{'pkgName':'com.chillyroom.knight.m4399','supportVerCode':'*','supportVerName':'*','skipGMS':false,'skipLVL':false}]"]
+//                    buildConfigField "String", "toolbox_pkgname", "\"com.iplay.assistant.soulknight.cn\""
+//                    buildConfigField "boolean", "buy", "true"
+//                    gamename = 'soulknight'
+//                    break;
+//                case "gta":
+//                    applicationId "com.gameassist.plugin.gta"
+//                    manifestPlaceholders = [APP_NAME: "com.rockstargames.gtasa", APP_SUPPORT: "[{'pkgName': 'com.rockstargames.gtasa','supportVerCode': '*','supportVerName': '*','skipGMS': false,'skipLVL': false}]"]
+//                    buildConfigField "String", "toolbox_pkgname", "\"com.iplay.assistant.gta.cn\""
+//                    buildConfigField "boolean", "buy", "true"
+//                    gamename = 'gta'
+//                    break;
+//                case "pixelgun":
+//                    applicationId "com.gameassist.plugin.pixelgun"
+//                    manifestPlaceholders = [APP_NAME: "com.pixel.gun3d", APP_SUPPORT: "[{'pkgName':'com.pixel.gun3d','supportVerCode':'*','supportVerName':'*','skipGMS':false,'skipLVL':false}]"]
+//                    buildConfigField "String", "toolbox_pkgname", "\"com.iplay.assistant.pixelgun.cn\""
+//                    buildConfigField "boolean", "buy", "true"
+//                    gamename = 'pixelgun'
+//                    break;
+//                case "arrowio":
+//                    applicationId "com.gameassist.plugin.arrowio"
+//                    manifestPlaceholders = [APP_NAME: "com.cmcm.arrowio", APP_SUPPORT: "[{'pkgName':'com.cmcm.arrowio','supportVerCode':'*','supportVerName':'*','skipGMS':true,'skipLVL':true}]"]
+//                    buildConfigField "String", "toolbox_pkgname", "\"com.iplay.assistant.arrow.io.cn\""
+//                    buildConfigField "boolean", "buy", "true"
+//                    gamename = 'arrowio'
+//                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    def outputMapFile = ''
+    def outputApkFile = ''
+
+    applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            if (variant.buildType.name == "debug") {
+                output.outputFile = new File(
+                        output.outputFile.parent,
+//                        "${applicationId}.apk".toLowerCase())
+                        "${applicationId}-${config}.apk".toLowerCase())
+//                        "plugin-${variant.productFlavors[0].name}-${variant.buildType.name}-v${variant.versionCode}.apk".toLowerCase())
+            } else {
+                output.outputFile = new File(
+                        output.outputFile.parent,
+                        "${applicationId}.apk".toLowerCase())
+//                        "plugin-${variant.productFlavors[0].name}.apk".toLowerCase())
+
+            }
+        }
+    }
+
+//    project.afterEvaluate {
+//        //在Release执行以后
+//        tasks.forEach() {
+//            println ' -----> all task:' + it
+//            if (it.name.equalsIgnoreCase('assembleRelease')) {
+//                it.doLast {
+//                    println(' ********************************** ' + System.getProperties().get("os.name") + '*********************')
+//                    println(' --> 打包已完成，开始后续工作 ...')
+//                    task(copyMapping, type: Copy) {
+//                        from "${project.buildDir}/outputs/mapping/release/"
+//                        into "${project.rootDir}/release"
+//                        include "**/mapping.txt"
+//                        rename("mapping.txt", outputMapFile)
+//                        println('    --> 保留代码混淆映射文件: ' + outputMapFile)
+//                    }.execute()
+//
+//                    task(AndResGuard) {
+//                        def guardJarFile = new File(project.rootDir, 'AndResGuard/AndResGuard-cli-1.2.0.jar')
+//                        //AndResGuard jar包
+//                        def guardConfigFile = new File(project.rootDir, 'AndResGuard/config.xml')
+//                        //config.xml配置文件
+//                        def originApkFile = new File(project.rootDir, "release/" + outputApkFile)
+//                        //需要压缩的apk
+//                        def outputDir = new File(project.rootDir, "release/compressed/") //输出的位置
+//
+//                        def zipalign = new File(project.rootDir, 'AndResGuard/zipalign')
+//                        //AndResGuard jar包
+//                        if (System.getProperties().get("os.name").startsWith('Mac')) {
+//                            zipalign = new File(project.rootDir, 'AndResGuard/zipalign.cmd')
+//                            //AndResGuard jar包
+//                            println "    --> 资源压缩：使用mac版本zipalign，" + zipalign
+//                        }
+//
+//                        def chmod = """chmod 755 ${zipalign}""".execute()
+//                        chmod.waitFor()
+//
+//                        println("  --> java -jar ${guardJarFile} ${originApkFile} -config ${guardConfigFile} -out ${outputDir}  -zipalign ${zipalign}")
+//                        if (originApkFile.exists()) {
+//                            def proc = """java -jar ${guardJarFile} ${originApkFile} -config ${
+//                                guardConfigFile
+//                            } -out ${outputDir} -zipalign ${zipalign}""".execute()
+//                            proc.waitFor();
+//                            if (outputDir.exists()) {
+//                                outputDir.eachFile {
+//                                    if (it.getName().endsWith("_signed_aligned.apk")) {
+//                                        println "    --> 资源压缩：保留结果文件 " + it.getName() + " :" + it.length()
+//                                        it.renameTo(new File(project.rootDir, "release/" + outputApkFile.replace(".apk", "-compressed.apk")))
+//                                    } else if (it.getName().startsWith("resource_mapping") && it.getName().endsWith(".txt")) {
+//                                        println "    --> 资源压缩：保留混淆映射文件 " + it.getName() + " :" + it.length()
+//                                        it.renameTo(new File(project.rootDir, "release/" + outputMapFile.replace(".txt", ".rsc.txt")))
+//                                    } else if (it.isDirectory()) {
+//                                        println "    --> 资源压缩：删除多余目录 " + it.getName()
+//                                        it.deleteDir()
+//                                    } else {
+//                                        println "    --> 资源压缩：删除多余文件 " + it.getName() + " :" + it.length()
+//                                        it.delete()
+//                                    }
+//                                }
+//                            }
+//                            if (proc.exitValue() != 0) {
+//                                println "    --> 资源压缩：失败，错误日志：\n${proc.err.text}"
+//                            }
+//                        } else {
+//                            println "    --> 资源压缩：失败，缺少原始APK文件"
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//    }
+}
+
+
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
+dependencies {
+//        compile fileTree(dir: 'libs', include: ['*.jar'])
+//        androidTestCompile('com.android.support.com.example.common.test.espresso:espresso-core:2.2.2', {
+//            exclude group: 'com.android.support', module: 'support-annotations'
+//        })
+    //    compile 'com.android.support:appcompat-v7:25.1.0'
+//    testCompile 'junit:junit:4.12'
+    provided files('libs/pluginInterface.jar')
+    provided project(':common')
+//    provided project(':pluginInterface')
+    compile project(':' + lib)
+//    compile files('libs/android-support-v8-renderscript.jar')
+
+}
+
+
